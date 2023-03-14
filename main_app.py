@@ -4,7 +4,7 @@ from datetime import date
 import pandas as pd
 import webbrowser
 import os
-from reportlab.pdfgen import canvas  # for pdf
+
 
 stl.title("Amazon Company Pool Campus Drive")
 
