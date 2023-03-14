@@ -1,83 +1,35 @@
-import base64
-import streamlit as stl
-from datetime import date
-import pandas as pd
-import webbrowser
-import os
+import streamlit as st
 
+# Text files
 
-stl.title("Amazon Company Pool Campus Drive")
+text_contents = '''
+Foo, Bar
+123, 456
+789, 000
+'''
 
-stl.write("### Student Response Form <br>", unsafe_allow_html=True)
-# stl.write(datetime.now())
+# Different ways to use the API
 
-name = stl.text_input("**Name***", max_chars=60,
-                      placeholder="Enter your Full Name", key='nme')
+st.download_button('Download CSV', text_contents, 'text/csv')
+st.download_button('Download CSV', text_contents)  # Defaults to 'text/plain'
 
-clg_name = stl.text_input("**College Name***", max_chars=60,
-                          placeholder="Enter your Institution Name")
+with open('myfile.csv') as f:
+   st.download_button('Download CSV', f)  # Defaults to 'text/plain'
 
-dob = stl.date_input(
-    "**Date of Birth***", min_value=date(1980, 6, 1), max_value=date.today())
+# ---
+# Binary files
 
-gender = stl.radio("**Gender***", ['Male', 'Female', 'Other'])
+binary_contents = b'whatever'
 
-branch = stl.selectbox(
-    "**Branch***", ["Computer", "Information Technology", "Electronics and Telecommunications", "Mechanical", "Civil", 'Other'], index=5)
+# Different ways to use the API
 
-year = stl.radio("**Year***", ['1st', '2nd', '3rd', 'B.Tech'])
+st.download_button('Download file', binary_contents)  # Defaults to 'application/octet-stream'
 
-relocate = stl.multiselect("**Ready to relocate at***",
-                           ['Mumbai', 'Pune', 'Hydrabad', 'Bengaluru', 'Chennai', 'Gudgaon'])
+with open('myfile.zip', 'rb') as f:
+   st.download_button('Download Zip', f, file_name='archive.zip')  # Defaults to 'application/octet-stream'
 
-eng_profic = stl.slider("English Proficiency ", min_value=1, max_value=5,)
+# You can also grab the return value of the button,
+# just like with any other button.
 
-resume = stl.file_uploader("**Upload your Resume***", type=['pdf'],)
-
-question = stl.text_area("Any Question to HR ? (Optional)", max_chars=1000,
-                         placeholder="Feel Free to ask your doubt here :) ")
-
-if stl.button("Submit"):
-    if not any([name, clg_name, relocate]) or not (resume):
-        stl.write("Error: All fields with * must be filled")
-    else:
-        data = pd.DataFrame({
-
-            'Field': ['Name', 'College Name', 'DOB', 'Gender', 'Branch', 'Year',
-                      'Relocate Locations ', 'Resume Uploaded', 'Question'],
-            'Data': [name, clg_name, dob, gender, branch, year,
-                     (lambda relocate: '  |  '.join(relocate))(relocate), 'Yes' if resume else 'No', question]
-        })
-
-        stl.dataframe(data, use_container_width=True)
-
-# if resume is not None:
-#     if stl.button('Open Resume in New Window'):
-# create a temporary file to hold the resume contents
-
-# with open(temp_file_path, 'wb') as f:
-#     f.write(resume.read())
-
-# # check if file exists before opening
-# if os.path.exists(temp_file_path):
-#     # open resume in new browser
-#     webbrowser.open_new_tab('file:///' + temp_file_path)
-# else:
-#     stl.error('Error opening PDF file')
-
-
-# '''
-#     locations = ''
-#     for i in relocate:
-#         locations += i + "  |  "
-#     stl.write(locations)
-# '''
-# if not (name or clg_name == None ) or  :
-#     stl.write("Must fill all the fields")
-
-
-# stl.dataframe(data)
-#             stl.write("Opening .......")
-#             file_contents = resume.read()
-#             with open("temp.pdf", "wb") as f:
-#                 f.write(file_contents)
+if st.download_button(...):
+   st.write('Thanks for downloading!')
