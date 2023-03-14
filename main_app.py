@@ -1,35 +1,28 @@
 import streamlit as st
+import requests
 
-# Text files
+# download the YouTube video and save it to a file
+def download_video(video_url, file_path):
+    response = requests.get(video_url)
+    with open(file_path, "wb") as f:
+        f.write(response.content)
 
-text_contents = '''
-Foo, Bar
-123, 456
-789, 000
-'''
+# create a text input widget for entering the YouTube video URL
+video_url = st.text_input("Enter YouTube video URL", "")
 
-# Different ways to use the API
+# create a download button that downloads the video when clicked
+if st.button("Download video"):
+    try:
+        # download the video to the default download directory on the remote server
+        file_name = "video.mp4"
+        download_video(video_url, file_name)
 
-st.download_button('Download CSV', text_contents, 'text/csv')
-st.download_button('Download CSV', text_contents)  # Defaults to 'text/plain'
+        # offer the downloaded video as a download button
+        st.download_button(
+            label="Download video",
+            data=file_name,
+            mime="video/mp4",
+        )
+    except Exception as e:
+        st.write("Error:", e)
 
-with open('myfile.csv') as f:
-   st.download_button('Download CSV', f)  # Defaults to 'text/plain'
-
-# ---
-# Binary files
-
-binary_contents = b'whatever'
-
-# Different ways to use the API
-
-st.download_button('Download file', binary_contents)  # Defaults to 'application/octet-stream'
-
-with open('myfile.zip', 'rb') as f:
-   st.download_button('Download Zip', f, file_name='archive.zip')  # Defaults to 'application/octet-stream'
-
-# You can also grab the return value of the button,
-# just like with any other button.
-
-if st.download_button(...):
-   st.write('Thanks for downloading!')
